@@ -1,6 +1,16 @@
 ## Final Project
 
+### Run Main Program
 
+Use default file (sars_spike_protein_reads.fastq):  
+```
+python .\main.py
+```
+
+User entered file:
+```
+python .\main.py filename
+```
 
 ### Run Trimming
 

@@ -2,6 +2,7 @@
 
 import sys
 import numpy as np
+import de_bruijn as db
 
 # ==============================================================================================================
 # Retreives header/sequence pair data from the fna file
@@ -53,12 +54,16 @@ def main():
     if(len(sys.argv) == 2):                                                             
         fna_file = sys.argv[1]                                                          # Extracting fastq file name from arguments
         data = get_data(fna_file)                                                       # Processing genome data from fna file
+
+        db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
     
     # ----------------------------------------------------------------------------------------------------------
     # Use default file
     elif(len(sys.argv) == 1):
         fna_file = "./input/sars_spike_protein_reads.fastq"
-        data = get_data(fna_file)
+        data = get_data(fna_file)                                                       # Processing genome data from fna file
+
+        db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
 
 
 if __name__ == "__main__":
