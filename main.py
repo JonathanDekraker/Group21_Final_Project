@@ -56,6 +56,7 @@ def main():
         data = get_data(fna_file)                                                       # Processing genome data from fna file
 
         db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
+        db_graph.matplot_graph(False,True)
     
     # ----------------------------------------------------------------------------------------------------------
     # Use default file
@@ -64,7 +65,7 @@ def main():
         data = get_data(fna_file)                                                       # Processing genome data from fna file
 
         db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
-
+        db_graph.matplot_graph(False,True)
 
 if __name__ == "__main__":
     main()
