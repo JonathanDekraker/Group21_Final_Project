@@ -1,3 +1,4 @@
 # Ignore trim files
 Trimmomatic/
 Lighter/
+.DS_Store
