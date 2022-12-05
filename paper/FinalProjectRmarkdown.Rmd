@@ -55,7 +55,7 @@ We thank the CSCI5481 course.
 \onecolumn
 ```{r echo=FALSE, out.width="100%", fig.align ='center', fig.cap="de Bruijn Graph"}
 library(knitr)
-include_graphics("deBruijn.png")
+include_graphics("../output/deBruijn.png")
 ```
 ## References
 
