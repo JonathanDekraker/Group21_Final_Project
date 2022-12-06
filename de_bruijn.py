@@ -71,7 +71,6 @@ class De_bruijn:
 
                     if k1[:-1] == k2[1:]:                   # k-1 mers are the same (ex. k1=CGTA, k2=ACGT, CGT == CGT)
                         edges.add((k2[:-1], k1[:-1]))       # Add edge
-        print(edges)
         return edges
 
 
