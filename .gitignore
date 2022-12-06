@@ -2,4 +2,5 @@
 Trimmomatic/
 Lighter/
 .DS_Store
+# Ignore spike_protein_directed_graph.txt
 output/spike_protein_directed_graph.txt
