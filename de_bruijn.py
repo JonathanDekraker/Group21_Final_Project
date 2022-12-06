@@ -18,12 +18,15 @@ class De_bruijn:
         self.edges = set()
         self.de_bruijn_graph()
 
+
     # ----------------------------------------------------------------------------------------------------------
     # Sets values for attributes self.kmer and self.edges
     def de_bruijn_graph(self, k=3, cycle=True):
 
         self.kmers = self.get_kmers(k, cycle)
         self.edges = self.get_edges(self.kmers)
+
+
 
     # ----------------------------------------------------------------------------------------------------------
     # Build a list of all kmers in the provided sequences
@@ -37,7 +40,7 @@ class De_bruijn:
 
             for i in range(0, len(s)):              # Iterate thru a sequence to find kmers
                 kmer = s[i:i + k]
-        
+
                 length = len(kmer)
                 if cycle:                           # Get kmer for cyclic sequences
                     if len(kmer) != k:
@@ -46,12 +49,12 @@ class De_bruijn:
                 else:                               # Skip for non-cyclic sequences
                     if len(kmer) != k:
                         continue
-        
+
                 if kmer in kmers:              # Add to kmer count (kmer is already found)
                     kmers[kmer] += 1
                 else:                               # Add kmer to dictionary (kmer is new)
                     kmers[kmer] = 1
-        
+
         return kmers
 
     # ----------------------------------------------------------------------------------------------------------
@@ -62,25 +65,26 @@ class De_bruijn:
         for k1 in kmers:
             for k2 in kmers:
                 if k1 != k2:                                # Iterate thru all non-equal kmers (k1 != k2)
-                    
+
                     if k1[1:] == k2[:-1]:                   # k-1 mers are the same (ex. k1=ACGT, k2=CGTA, CGT == CGT)
                         edges.add((k1[:-1], k2[:-1]))       # Add edge
 
                     if k1[:-1] == k2[1:]:                   # k-1 mers are the same (ex. k1=CGTA, k2=ACGT, CGT == CGT)
                         edges.add((k2[:-1], k1[:-1]))       # Add edge
-
+        print(edges)
         return edges
+
 
     # ----------------------------------------------------------------------------------------------------------
     # Creates graph of connected nodes with corresponding kmers
     def plot_graph(self, width=500, height=500):
-    
+
         graph = ty.graph(
             [i[0] for i in self.edges],
             [i[1] for i in self.edges],
             width=width,
             height=height,
-            tmarker=">", 
+            tmarker=">",
             vsize=25,
             vstyle={"stroke": "black", "stroke-width": 2, "fill": "none"},
             vlstyle={"font-size": "11px"},
@@ -104,8 +108,7 @@ class De_bruijn:
         }
 
         nx.draw(fig, pos, **options)        # Drawing directed graph
-        
+
         plt.axis("off")                     # Do not show any axis
         if(show_fig): plt.show()            # Toggel show
         if(save_fig): plt.savefig('./output/deBruijn.png', dpi=500)     # Saving file and setting size
-    
