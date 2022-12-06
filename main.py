@@ -74,7 +74,6 @@ def main():
     if(len(sys.argv) == 2):
         fna_file = sys.argv[1]                                                          # Extracting fastq file name from arguments
         data = get_data(fna_file)                                                       # Processing genome data from fna file
-
         db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
         db_graph.matplot_graph(False,True)
 
@@ -85,6 +84,7 @@ def main():
         data = get_data(fna_file)                                                       # Processing genome data from fna file
 
         db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
+        db_graph.create_edges_file()
         #db_graph.matplot_graph(False,True)
 
         create_directed_graph(db_graph.edges)                                           # Create txt file containing directed graph of sars spike protein

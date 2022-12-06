@@ -27,7 +27,6 @@ class De_bruijn:
         self.edges = self.get_edges(self.kmers)
 
 
-
     # ----------------------------------------------------------------------------------------------------------
     # Build a list of all kmers in the provided sequences
     # k: kmer size
@@ -71,7 +70,15 @@ class De_bruijn:
 
                     if k1[:-1] == k2[1:]:                   # k-1 mers are the same (ex. k1=CGTA, k2=ACGT, CGT == CGT)
                         edges.add((k2[:-1], k1[:-1]))       # Add edge
+
         return edges
+
+    def create_edges_file(self):                            # Create edges.txt file for creation of spike_protein_directed_graph.txt
+        with open('output/edges.txt', 'w') as f:
+            for edge in self.edges:
+                x1, x2 = edge
+                f.write(x1 + '->' + x2 + '\n')
+        f.close()
 
 
     # ----------------------------------------------------------------------------------------------------------
