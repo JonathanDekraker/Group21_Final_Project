@@ -48,7 +48,7 @@ def make_txt(data, filename='./output/output.txt'):
 
 
 def create_directed_graph(edges):
-    with open("spike_protein_directed_graph.txt", "w") as f:
+    with open("output/spike_protein_directed_graph.txt", "w") as f:
         added_nodes = set()                                 # Set of (nodes, destination) pairs that have already been iterated through
 
         for edge in edges:

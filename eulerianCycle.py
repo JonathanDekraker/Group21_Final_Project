@@ -76,7 +76,7 @@ def EulerianCycle(strings, format=True):
 
 
 def main():
-    f = open('spike_protein_directed_graph.txt', 'r')
+    f = open('output/spike_protein_directed_graph.txt', 'r')
 
     text = []
     for line in f:
