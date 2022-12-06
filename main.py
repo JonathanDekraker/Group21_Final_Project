@@ -54,7 +54,7 @@ def create_directed_graph(edges):
         for edge in edges:
             node,dest = edge
             if edge not in added_nodes:                     # Check if (node, destination) pair has already been writted
-                f.write(node + '->' + dest)
+                f.write(node + ' -> ' + dest)
 
                 for edge2 in edges:                         # Iterate through all edges to see if there are any other edges coming out of node
                     node2, dest2 = edge2
