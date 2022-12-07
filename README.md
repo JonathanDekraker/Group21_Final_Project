@@ -11,6 +11,7 @@ Jonathan Dekraker<sup>1</sup>, José Solórzano<sup>2</sup>, Samuel Kitzerow<sup
 Use default file (sars_spike_protein_reads.fastq):  
 ```
 python .\main.py
+python .\main.py start end
 ```
 
 User entered file:

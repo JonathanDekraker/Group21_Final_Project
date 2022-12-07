@@ -23,7 +23,9 @@ class De_bruijn:
     def de_bruijn_graph(self, k=3, cycle=True):
 
         self.kmers = self.get_kmers(k, cycle)
+        print("Completed ", k, "-mer build!")
         self.edges = self.get_edges(self.kmers)
+        print("Completed edge ", k, "-mer build!")
 
     # ----------------------------------------------------------------------------------------------------------
     # Build a list of all kmers in the provided sequences
@@ -149,7 +151,7 @@ class De_bruijn:
     # edge_graph: creates graph image
     # edge_file: creates edge file used for directed graph
     # dir_graph: creates directed edge file
-    # i: label for file iterations (used for kmer loop)
+    # i: label for k-mer used (used for kmer loop)
     def make_docs(self, edge_graph=False, edge_file=False, dir_graph=False, i='1'):
 
         if(edge_graph): self.matplot_graph(False,True, './output/deBruijn_' + i + '.png')
