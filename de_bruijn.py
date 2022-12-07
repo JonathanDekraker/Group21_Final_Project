@@ -18,14 +18,12 @@ class De_bruijn:
         self.edges = set()
         self.de_bruijn_graph()
 
-
     # ----------------------------------------------------------------------------------------------------------
     # Sets values for attributes self.kmer and self.edges
     def de_bruijn_graph(self, k=3, cycle=True):
 
         self.kmers = self.get_kmers(k, cycle)
         self.edges = self.get_edges(self.kmers)
-
 
     # ----------------------------------------------------------------------------------------------------------
     # Build a list of all kmers in the provided sequences
@@ -73,13 +71,39 @@ class De_bruijn:
 
         return edges
 
-    def create_edges_file(self):                            # Create edges.txt file for creation of spike_protein_directed_graph.txt
-        with open('output/edges.txt', 'w') as f:
+    # ----------------------------------------------------------------------------------------------------------
+    # Create edges.txt file for creation of spike_protein_directed_graph.txt
+    def create_edges_file(self, file='output/temp/edges.txt'):
+        print("Creating Edge File: ", file)
+
+        with open(file, 'w') as f:
             for edge in self.edges:
                 x1, x2 = edge
                 f.write(x1 + '->' + x2 + '\n')
         f.close()
 
+    # ----------------------------------------------------------------------------------------------------------
+    # Writes edge data to a text file
+    def create_directed_graph(self, file='output/temp/spike_protein_directed_graph.txt'):
+        print("Creating Directed Graph File: ", file)
+
+        with open(file, "w") as f:
+            added_nodes = set()                                 # Set of (nodes, destination) pairs that have already been iterated through
+
+            for edge in self.edges:
+                node,dest = edge
+                if edge not in added_nodes:                     # Check if (node, destination) pair has already been writted
+                    f.write(node + ' -> ' + dest)
+
+                    for edge2 in self.edges:                         # Iterate through all edges to see if there are any other edges coming out of node
+                        node2, dest2 = edge2
+                        # If the nodes are the same AND (node, destination) pair is not the same as above AND this node has not already been created
+                        if node == node2 and edge != edge2 and edge2 not in added_nodes:
+                            f.write(',' + dest2)                # Write the additional destination for exising node
+                            added_nodes.add(edge2)              # add (node, destination) pair to already added set
+
+                    f.write('\n')
+        f.close()
 
     # ----------------------------------------------------------------------------------------------------------
     # Creates graph of connected nodes with corresponding kmers
@@ -100,7 +124,8 @@ class De_bruijn:
 
     # ----------------------------------------------------------------------------------------------------------
     # Creates graph of connected nodes with corresponding kmers using matplotlib
-    def matplot_graph(self, show_fig=True, save_fig=False):
+    def matplot_graph(self, show_fig=True, save_fig=False, file='./output/deBruijn.png'):
+        print("Creating Garph Image: ", file)
         fig = nx.DiGraph()                  # Initialize weighted graph
         fig.add_edges_from(self.edges)
         pos = nx.shell_layout(fig)          # Set layout to shell (circular)
@@ -117,4 +142,16 @@ class De_bruijn:
 
         plt.axis("off")                     # Do not show any axis
         if(show_fig): plt.show()            # Toggel show
-        if(save_fig): plt.savefig('./output/deBruijn.png', dpi=500)     # Saving file and setting size
+        if(save_fig): plt.savefig(file, dpi=500)     # Saving file and setting size
+
+    # ----------------------------------------------------------------------------------------------------------
+    # Master function for creating documents
+    # edge_graph: creates graph image
+    # edge_file: creates edge file used for directed graph
+    # dir_graph: creates directed edge file
+    # i: label for file iterations (used for kmer loop)
+    def make_docs(self, edge_graph=False, edge_file=False, dir_graph=False, i='1'):
+
+        if(edge_graph): self.matplot_graph(False,True, './output/deBruijn_' + i + '.png')
+        if(edge_file): self.create_edges_file('output/temp/edges_' + i + '.txt')
+        if(dir_graph): self.create_directed_graph('output/temp/spike_protein_directed_graph_' + i + '.txt')

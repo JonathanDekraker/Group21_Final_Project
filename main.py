@@ -46,25 +46,13 @@ def make_txt(data, filename='./output/output.txt'):
         for x in data:
             file.write(str(x) + '\n')
 
+# ==============================================================================================================
+def loop_kmer(data, start, end):
 
-def create_directed_graph(edges):
-    with open("output/spike_protein_directed_graph.txt", "w") as f:
-        added_nodes = set()                                 # Set of (nodes, destination) pairs that have already been iterated through
-
-        for edge in edges:
-            node,dest = edge
-            if edge not in added_nodes:                     # Check if (node, destination) pair has already been writted
-                f.write(node + ' -> ' + dest)
-
-                for edge2 in edges:                         # Iterate through all edges to see if there are any other edges coming out of node
-                    node2, dest2 = edge2
-                    # If the nodes are the same AND (node, destination) pair is not the same as above AND this node has not already been created
-                    if node == node2 and edge != edge2 and edge2 not in added_nodes:
-                        f.write(',' + dest2)                # Write the additional destination for exising node
-                        added_nodes.add(edge2)              # add (node, destination) pair to already added set
-
-                f.write('\n')
-    f.close()
+    for i in range(start, end+1):
+        data.de_bruijn_graph(k=i)
+        data.make_docs(data, True, True, True, str(i))
+    
 
 # ==============================================================================================================
 def main():
@@ -84,10 +72,7 @@ def main():
         data = get_data(fna_file)                                                       # Processing genome data from fna file
 
         db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
-        db_graph.create_edges_file()
-        #db_graph.matplot_graph(False,True)
-
-        create_directed_graph(db_graph.edges)                                           # Create txt file containing directed graph of sars spike protein
+        db_graph.make_docs(True,True,True)
 
 if __name__ == "__main__":
     main()
