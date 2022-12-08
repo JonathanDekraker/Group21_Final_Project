@@ -1,6 +1,7 @@
 # Final project
 
 import sys
+import os
 import numpy as np
 import de_bruijn as db
 
@@ -48,44 +49,56 @@ def make_txt(data, filename='./output/output.txt'):
 
 # ==============================================================================================================
 def loop_kmer(data, start, end):
-    db_data = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
+    db_data = db.De_bruijn(data[0], data[1])                    # Create de Bruijn graph
 
     for i in range(start, end+1):
         db_data.de_bruijn_graph(k=i)
         db_data.make_docs(True, True, True, str(i))
-    
+
+# ==============================================================================================================
+# Removes temporary output files in temp
+def rmove():
+    dir = './output/temp/'
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))
 
 # ==============================================================================================================
 def main():
-    
+
     # ----------------------------------------------------------------------------------------------------------
     # User enters prefered file
     if(len(sys.argv) == 2):
-        fna_file = sys.argv[1]                                                          # Extracting fastq file name from arguments
-        data = get_data(fna_file)                                                       # Processing genome data from fna file
-        db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
+        rmove()
+
+        fna_file = sys.argv[1]                                          # Extracting fastq file name from arguments
+        data = get_data(fna_file)                                       # Processing genome data from fna file
+        db_graph = db.De_bruijn(data[0], data[1])                       # Create de Bruijn graph
         db_graph.matplot_graph(False,True)
     
     # ----------------------------------------------------------------------------------------------------------
     # Use default file
     elif(len(sys.argv) == 1):
+        rmove()
+
         fna_file = "./input/sars_spike_protein_reads.fastq"
-        data = get_data(fna_file)                                                       # Processing genome data from fna file
+        data = get_data(fna_file)                                       # Processing genome data from fna file
         k = 10
 
-        db_graph = db.De_bruijn(data[0], data[1], k=k)                                       # Create de Bruijn graph
+        db_graph = db.De_bruijn(data[0], data[1], k=k)                  # Create de Bruijn graph
         db_graph.make_docs(True,True,True, str(k))
 
     # ----------------------------------------------------------------------------------------------------------
     # Use default file and run kmer loop
     # python .\main start stop
     elif(len(sys.argv) == 3):
-        start = sys.argv[1]                                                             # Start at this k-mer
-        end = sys.argv[2]                                                               # End at this k-mer
+        rmove()
+        
+        start = sys.argv[1]                                             # Start at this k-mer
+        end = sys.argv[2]                                               # End at this k-mer
 
         fna_file = "./input/sars_spike_protein_reads.fastq"
-        data = get_data(fna_file)                                                       # Processing genome data from fna file
-        loop_kmer(data, int(start), int(end))                                                           # Loop thru k-mers from start to end
+        data = get_data(fna_file)                                       # Processing genome data from fna file
+        loop_kmer(data, int(start), int(end))                           # Loop thru k-mers from start to end
 
 
 if __name__ == "__main__":
