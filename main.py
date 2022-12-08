@@ -71,9 +71,10 @@ def main():
     elif(len(sys.argv) == 1):
         fna_file = "./input/sars_spike_protein_reads.fastq"
         data = get_data(fna_file)                                                       # Processing genome data from fna file
+        k = 5
 
-        db_graph = db.De_bruijn(data[0], data[1])                                       # Create de Bruijn graph
-        db_graph.make_docs(True,True,True)
+        db_graph = db.De_bruijn(data[0], data[1], k=k)                                       # Create de Bruijn graph
+        db_graph.make_docs(True,True,True, str(k))
 
     # ----------------------------------------------------------------------------------------------------------
     # Use default file and run kmer loop

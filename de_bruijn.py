@@ -10,22 +10,22 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 class De_bruijn:
-    def __init__(self, seq = [], header = []):
+    def __init__(self, seq = [], header = [], k=3, cycle=True):
         self.header = header
         self.seq = seq
 
         self.kmers = {}
         self.edges = set()
-        self.de_bruijn_graph()
+        self.de_bruijn_graph(k, cycle)
 
     # ----------------------------------------------------------------------------------------------------------
     # Sets values for attributes self.kmer and self.edges
     def de_bruijn_graph(self, k=3, cycle=True):
 
         self.kmers = self.get_kmers(k, cycle)
-        print("Completed ", k, "-mer build!")
+        print("Completed: ", k, "-mer")
         self.edges = self.get_edges(self.kmers)
-        print("Completed edge ", k, "-mer build!")
+        print("Completed Edges: ", k, "-mer")
 
     # ----------------------------------------------------------------------------------------------------------
     # Build a list of all kmers in the provided sequences
@@ -53,7 +53,7 @@ class De_bruijn:
                     kmers[kmer] += 1
                 else:                               # Add kmer to dictionary (kmer is new)
                     kmers[kmer] = 1
-
+        
         return kmers
 
     # ----------------------------------------------------------------------------------------------------------
