@@ -19,10 +19,10 @@ class De_bruijn:
         self.edges = set()
 
     # ----------------------------------------------------------------------------------------------------------
-    def de_bruijn_graph(self, start=0, end=1, k=3, cycle=True):
+    def de_bruijn_graph(self, start=0, end=1, k=3, cycle=False):
 
         if(end > len(self.seq) or start < 0 or start > end):             # Cannot exceed bounds of the list self.seq
-            print("ERROR: Invalid input for num!")
+            print("ERROR: Invalid input!")
             return
 
         seq = self.seq[start:end]
@@ -34,7 +34,7 @@ class De_bruijn:
     # Build a list of all kmers in the provided sequences
     # k: kmer size
     # cycle: sequence is cyclic or not
-    def get_kmers(self, seq, k=3, cycle=True):
+    def get_kmers(self, seq, k=3, cycle=False):
         kmers = {}
 
         for s in tqdm(seq, desc=str(k)+'-mers'):   # Iterate thru sequences with progress bar
@@ -112,7 +112,7 @@ class De_bruijn:
 
     # ----------------------------------------------------------------------------------------------------------
     # Creates graph of connected nodes with corresponding kmers using matplotlib
-    def matplot_graph(self, show_fig=True, save_fig=False, file='./output/deBruijn.png'):
+    def matplot_graph(self, show_lab=False, show_fig=True, save_fig=False, file='./output/deBruijn.png'):
         print("Creating Garph Image: ", file)
         with tqdm(total=4, desc='Image Graph') as bar:              # Progress bar
             plt.clf()
@@ -127,7 +127,7 @@ class De_bruijn:
                 "node_color": "#A0CBE2",
                 "node_size": 20,
                 "edge_color": "#7d0901",
-                "with_labels": True,            # Show kmer labels
+                "with_labels": show_lab,            # Show kmer labels
                 "font_size": 5,
                 "font_color": "#0a0a0a"
             }
@@ -147,6 +147,6 @@ class De_bruijn:
     # i: label for k-mer used (used for kmer loop)
     def make_docs(self, edge_graph=False, edge_file=False, dir_graph=False, i='1'):
 
-        if(edge_graph): self.matplot_graph(False,True, './output/deBruijn_' + i + '.png')
+        if(edge_graph): self.matplot_graph(False, False,True, './output/deBruijn_' + i + '.png')
         if(edge_file): self.create_edges_file('output/temp/edges_' + i + '.txt')
         if(dir_graph): self.create_directed_graph('output/temp/spike_protein_directed_graph_' + i + '.txt')

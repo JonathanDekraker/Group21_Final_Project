@@ -41,7 +41,7 @@ def get_data(filename):
 
 # ==============================================================================================================
 # Writes data to a text file
-def make_txt(data, filename='./output/output.txt'):
+def make_txt(data, filename='./output/temp/output.txt'):
 
     with open(filename, 'w', newline='') as file:
         for x in data:
