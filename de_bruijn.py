@@ -11,33 +11,31 @@ from tqdm import tqdm               # Progress Bar
 import math
 
 class De_bruijn:
-    def __init__(self, seq = [], header = [], num=2, k=3, cycle=True):
+    def __init__(self, seq = [], header = []):
         self.header = header
         self.seq = seq
 
         self.kmers = {}
         self.edges = set()
-        self.de_bruijn_graph(num=num, k=k, cycle=cycle)
 
     # ----------------------------------------------------------------------------------------------------------
-    # Sets values for attributes self.kmer and self.edges
-    def de_bruijn_graph(self, num=2, k=3, cycle=True):
-        
-        self.kmers = self.get_kmers(num, k, cycle)
+    def de_bruijn_graph(self, start=0, end=1, k=3, cycle=True):
+
+        if(end > len(self.seq) or start < 0 or start > end):             # Cannot exceed bounds of the list self.seq
+            print("ERROR: Invalid input for num!")
+            return
+
+        seq = self.seq[start:end]
+
+        self.kmers = self.get_kmers(seq, k, cycle)
         self.edges = self.get_edges(self.kmers)
 
     # ----------------------------------------------------------------------------------------------------------
     # Build a list of all kmers in the provided sequences
     # k: kmer size
     # cycle: sequence is cyclic or not
-    def get_kmers(self, num=2, k=3, cycle=True):
+    def get_kmers(self, seq, k=3, cycle=True):
         kmers = {}
-
-        if(num > len(self.seq) or num < 1):             # Cannot exceed bounds of the list self.seq
-            print("ERROR: Invalid input for num!")
-            return kmers
-
-        seq = self.seq[:num-1]                          # Get kmers of these reads
 
         for s in tqdm(seq, desc=str(k)+'-mers'):   # Iterate thru sequences with progress bar
             #print("Sequence: ", s)
@@ -117,7 +115,7 @@ class De_bruijn:
     def matplot_graph(self, show_fig=True, save_fig=False, file='./output/deBruijn.png'):
         print("Creating Garph Image: ", file)
         with tqdm(total=4, desc='Image Graph') as bar:              # Progress bar
-
+            plt.clf()
             fig = nx.DiGraph()                  # Initialize weighted graph
             fig.add_edges_from(self.edges)      # Add edges to weighted graph
             bar.update(1)
