@@ -31,7 +31,6 @@ Allows trimming, discards bad reads, and alpha value is 0.1.
 ./lighter -r ../output.fastq -k 17 5000000 0.1 -t 10 -trim -discard
 ```
 
-
 edges.txt:
 	- File that contains all directed edges. Created by printing set from main.py
 
@@ -46,3 +45,10 @@ main.py:
 
 spike_protein_directed_graph.txt:
 	- A directed graph where the graph is given in the form of an adjacency list (from edges.txt)
+
+## Function Runtimes
+
+The system becomes sluggish when k-mers greater than 5 are used. The addition of progress bars helps judge the completion of 
+the program; however, the image function that creates the directed graph is slow. Upon investigation it was determined that
+`nx.draw(fig, pos, **options)` and `if(save_fig): plt.savefig(file, dpi=500)` takes a considerable amount of time (with the later 
+taking the longest to complete). 
