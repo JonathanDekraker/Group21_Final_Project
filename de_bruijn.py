@@ -8,31 +8,38 @@ https://eaton-lab.org/slides/genomics/answers/nb-10.2-de-Bruijn.html
 import matplotlib.pyplot as plt
 import networkx as nx               # Plotting directed graph
 from tqdm import tqdm               # Progress Bar
+import math
 
 class De_bruijn:
-    def __init__(self, seq = [], header = [], k=3, cycle=True):
+    def __init__(self, seq = [], header = [], num=2, k=3, cycle=True):
         self.header = header
         self.seq = seq
 
         self.kmers = {}
         self.edges = set()
-        self.de_bruijn_graph(k, cycle)
+        self.de_bruijn_graph(num=num, k=k, cycle=cycle)
 
     # ----------------------------------------------------------------------------------------------------------
     # Sets values for attributes self.kmer and self.edges
-    def de_bruijn_graph(self, k=3, cycle=True):
-
-        self.kmers = self.get_kmers(k, cycle)
+    def de_bruijn_graph(self, num=2, k=3, cycle=True):
+        
+        self.kmers = self.get_kmers(num, k, cycle)
         self.edges = self.get_edges(self.kmers)
 
     # ----------------------------------------------------------------------------------------------------------
     # Build a list of all kmers in the provided sequences
     # k: kmer size
     # cycle: sequence is cyclic or not
-    def get_kmers(self, k=3, cycle=True):
+    def get_kmers(self, num=2, k=3, cycle=True):
         kmers = {}
 
-        for s in tqdm(self.seq, desc=str(k)+'-mers'):    # Iterate thru sequences with progress bar
+        if(num > len(self.seq) or num < 1):             # Cannot exceed bounds of the list self.seq
+            print("ERROR: Invalid input for num!")
+            return kmers
+
+        seq = self.seq[:num-1]                          # Get kmers of these reads
+
+        for s in tqdm(seq, desc=str(k)+'-mers'):   # Iterate thru sequences with progress bar
             #print("Sequence: ", s)
 
             for i in range(0, len(s)):              # Iterate thru a sequence to find kmers
@@ -114,14 +121,16 @@ class De_bruijn:
             fig = nx.DiGraph()                  # Initialize weighted graph
             fig.add_edges_from(self.edges)      # Add edges to weighted graph
             bar.update(1)
-            pos = nx.shell_layout(fig)          # Set layout to shell (circular)
+            k = 0.3/math.sqrt(fig.order())
+            pos = nx.spring_layout(fig, k=k)          # Set layout to shell (circular)
             bar.update(1)
 
             options = {
                 "node_color": "#A0CBE2",
+                "node_size": 20,
                 "edge_color": "#7d0901",
                 "with_labels": True,            # Show kmer labels
-                "font_size": 12,
+                "font_size": 5,
                 "font_color": "#0a0a0a"
             }
 
