@@ -62,6 +62,10 @@ def rmove():
     for f in os.listdir(dir):
         os.remove(os.path.join(dir, f))
 
+    dir = './output/graph/'
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))
+
 # ==============================================================================================================
 def main():
 
@@ -80,7 +84,7 @@ def main():
             data = get_data(file)                                   # Processing genome data from fna file
             db_graph = db.De_bruijn(data[0], data[1])               # Create de Bruijn graph
             db_graph.de_bruijn_graph(start=lstart, end=lend, k=k)
-            db_graph.matplot_graph(False,True)
+            db_graph.make_docs(True,True,True,str(k))
 
         if(inpt == '-k'):                                           # User enters kmer range
             kstart = int(input("Enter starting k-mer value: "))
