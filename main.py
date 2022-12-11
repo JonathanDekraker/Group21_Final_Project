@@ -111,7 +111,7 @@ def main():
             db_graph.de_bruijn_graph(start=lstart, end=lend, k=k)
             db_graph.make_docs(True,True,True,str(k))
 
-        if(inpt == '-k'):                                           # User enters kmer range
+        elif(inpt == '-k'):                                           # User enters kmer range
             kstart = int(input("Enter starting k-mer value: "))
             kend = int(input("Enter ending k-mer value: "))
 
