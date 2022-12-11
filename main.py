@@ -4,6 +4,7 @@ import sys
 import os
 import numpy as np
 import de_bruijn as db
+import alignment as al
 
 # ==============================================================================================================
 # Retreives header/sequence pair data from the fna file
@@ -32,6 +33,15 @@ def get_data(filename):
                 header_data.append(head[1:])                # Add to header list
                 seq_data.append(seq)                        # Add to sequence list
 
+    elif(mime == 'txt'):                                    # File is a Text
+        print("Reading text file ", filename)
+
+        with open(filename) as f:
+            for seq in f:                                   # Read each line
+                seq = seq.strip()                           # Strip data of new line characters
+                seq_data.append(seq)                        # Append data to list
+
+            header_data.append('Assembled data')            # No headers should be in the file so add this one
     else:
         print("ERROR: Invalid File Type!")
         print("Only fna or fastq types, entered file type is ", mime)
@@ -48,15 +58,16 @@ def make_txt(data, filename='./output/temp/output.txt'):
             file.write(str(x) + '\n')
 
 # ==============================================================================================================
+# Loops thru a k-mer range, builds a set of kmers and edges
 def loop_kmer(data, kstart, kend, lstart=0, lend=1):
     db_data = db.De_bruijn(data[0], data[1])                    # Create de Bruijn graph
 
-    for i in range(kstart, kend+1):
+    for i in range(kstart, kend+1):                             # Loop thru k-mer range
         db_data.de_bruijn_graph(k=i)
         db_data.make_docs(True, True, True, str(i))
 
 # ==============================================================================================================
-# Removes temporary output files in temp
+# Removes temporary output files in temp and graph
 def rmove():
     dir = './output/temp/'
     for f in os.listdir(dir):
@@ -65,6 +76,20 @@ def rmove():
     dir = './output/graph/'
     for f in os.listdir(dir):
         os.remove(os.path.join(dir, f))
+
+# ==============================================================================================================
+def align_contig():
+    dir = './output/align/'                                         # Directory to beused
+    ref_seg = get_data('./input/sars_spike_protein_assembled.fna')  # Get data for reference sequence (Spike protien)
+
+    for file in os.listdir(dir):                                    # Iterate thru files in align folder
+        f = os.path.join(dir, file)
+        print(f)
+        data = get_data(f)                                          # Get in data from files for alignment
+
+        a = al.alignment(ref_seg[0], data[0])                       # Initialize alignment
+        a.get_alignment()                                           # Retrieve alignment data
+        #a.plot_comp(filename)                                      # Create a comparison plot of the two sequences
 
 # ==============================================================================================================
 def main():
@@ -101,7 +126,15 @@ def main():
 
             data = get_data(file)                                   # Processing genome data from fna file
             loop_kmer(data, kstart, kend, lstart, lend)
-    
+
+        elif(inpt == '-a'):                                         # Align contig with reference genome (Spike protein)
+            data = get_data(file)
+            align_contig(data)
+
+        else:
+            print("ERROR: Invalid Input!")
+            print("Use:\n-l\tsegmenting reads list\n-k\tk-mer range\n-kl\tk-mer range and segmenting reads list\n-a\taligning contig")
+            return
     # ----------------------------------------------------------------------------------------------------------
     # Use default file
     elif(len(sys.argv) == 1):
@@ -112,22 +145,19 @@ def main():
         k = 10
 
         db_graph = db.De_bruijn(data[0], data[1])                       # Create de Bruijn graph
-        db_graph.de_bruijn_graph(k=k)
+        db_graph.de_bruijn_graph(start=0, end=2, k=k)
         db_graph.make_docs(True,True,True, str(k))
 
     # ----------------------------------------------------------------------------------------------------------
     # Use default file and run kmer loop
     # python .\main start stop
+    '''
     elif(len(sys.argv) == 3):
         rmove()
 
-        start = sys.argv[1]                                             # Start at this k-mer
-        end = sys.argv[2]                                               # End at this k-mer
-
         fna_file = "./input/sars_spike_protein_reads.fastq"
         data = get_data(fna_file)                                       # Processing genome data from fna file
-        loop_kmer(data, int(start), int(end))                           # Loop thru k-mers from start to end
 
-
+    '''
 if __name__ == "__main__":
     main()
