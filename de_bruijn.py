@@ -19,7 +19,7 @@ class De_bruijn:
         self.edges = set()
 
     # ----------------------------------------------------------------------------------------------------------
-    def de_bruijn_graph(self, start=0, end=1, k=3, cycle=False):
+    def de_bruijn_graph(self, start=0, end=1, k=3, cycle=True):
 
         if(start < 0 or start > end or start == end):   # Cannot exceed bounds of the list self.seq
             print("ERROR: Invalid input!")
@@ -29,7 +29,6 @@ class De_bruijn:
             end = len(self.seq)
 
         seq = self.seq[start:end]                       # Get kmers from this list of sequences
-
         self.kmers = self.get_kmers(seq, k, cycle)
         self.edges = self.get_edges(self.kmers)
 
@@ -152,4 +151,8 @@ class De_bruijn:
 
         if(edge_graph): self.matplot_graph(False, False,True, './output/graph/deBruijn_' + i + '.png')
         if(edge_file): self.create_edges_file('output/temp/edges_' + i + '.txt')
-        if(dir_graph): self.create_directed_graph('output/temp/spike_protein_directed_graph_' + i + '.txt')
+
+        if(dir_graph): 
+            file = 'output/temp/spike_protein_directed_graph_' + i + '.txt'
+            self.create_directed_graph(file)
+            return file

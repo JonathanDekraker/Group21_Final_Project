@@ -36,6 +36,7 @@ class alignment:
         self.s = None                           # Scoring matrix
         self.n = None                           # Neighbor matrix (tracks direction)
         self.build_matrix()
+        self.get_alignment()
     
     # ----------------------------------------------------------------------------------------------------------------------
     # Initializes scoring and neighbor matrices
@@ -229,22 +230,27 @@ class alignment:
         print(self.vis)
         print(self.seq_align)
 
+    # ----------------------------------------------------------------------------------------------------------------------
+
+    def alignment_file(self, kmer):
+        filename = './output/align/alignment_{}.txt'.format(kmer)
+
+        with open(filename, 'w') as f:
+            f.write(str(self.score) + '\n')
+            f.write(self.ref_align + '\n')
+            f.write(self.vis + '\n')
+            f.write(self.seq_align + '\n')
+
 # ==========================================================================================================================
 # Testing
 def main():
     ref = "ATGTTTGTTTTTCTTGTTTTATTGCCACTAGTCTCTAGTCAGTGTGTTAATCTTACAACCAGA"
     seq = "AACCCGCCACCATGTTCGTGTTCCTGGTGCTGCTGCCTCTGGTGTCCAGCCAGTGTGTGAACC"
 
-    #a = alignment(ref, seq)
-    #a.print_matrices()
-    #a.get_alignment()
-    #a.print_alignment()
-    #a.print_matrices()
-
-    b = alignment(ref, seq, -2, -1, True)
-    b.get_local_alignment()
+    #b = alignment(ref, seq, -2, -1, True)
+    #b.get_local_alignment()
     #b.get_alignment()
-    b.print_alignment()
+    #b.print_alignment()
     #b.print_matrices()
 
 if __name__ == "__main__":

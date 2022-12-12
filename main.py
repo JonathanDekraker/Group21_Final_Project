@@ -1,12 +1,18 @@
 # Final project
 
-
 '''
 Process Frow:
 De Bruijn Garph -> Eulerian Cycle/Path -> Alignment
      (1)        ->         (2)         ->    (3)
 
-(1) FASTQ file of Reads -> Graph PDF, edges.txt
+(1) reads.FASTQ -> Graph.pdf, edges.txt, directed_graph.txt
+        Converts reads into kmers and edges. This data is then used to constuct a directed graph file and figure.
+
+(2) directed_graph.txt -> eulerianPath.txt, eulerianCycle.txt (assembled contigs)
+        Converts a directed graph file into an Eulerian cycle/path file. This is an assembled contig.
+
+(3) eulerianPath.txt, eulerianCycle.txt -> align.txt, comparison.pdf
+        Compares the Eulerian cycle/path file with the assembled spike protein and creates text file with the comparisons and a plot.
 '''
 
 import sys
@@ -71,11 +77,16 @@ def make_txt(data, filename='./output/temp/output.txt'):
 # ==============================================================================================================
 # Loops thru a k-mer range, builds a set of kmers and edges
 def loop_kmer(data, kstart, kend, lstart=0, lend=1):
+    res = input("\nDo you want alignment files (y)?: ")
     db_data = db.De_bruijn(data[0], data[1])                    # Create de Bruijn graph
 
     for i in range(kstart, kend+1):                             # Loop thru k-mer range
-        db_data.de_bruijn_graph(k=i)
-        db_data.make_docs(True, True, True, str(i))
+        db_data.de_bruijn_graph(start=lstart, end=lend, k=i)    # Create de Bruijn graph
+        file = db_data.make_docs(True, True, True, str(i))      # Create all files and get directed file
+
+        if(res == 'Y' or res == 'y'):                           # Perform alignment and create corresponding files
+            files = eulerian_string(file, str(i))               # Create Eulerian cycle and path
+            align_contig(files[0], i)
 
 # ==============================================================================================================
 # Clears out old files
@@ -99,6 +110,7 @@ def rmove():
 # ==============================================================================================================
 # Finds eulerian cycle and path, writes the data to a text file
 def eulerian_string(filename, kmer):
+    print("Reading: " + filename)
 
     text = []
     with open(filename, 'r') as f:                              # Open directed graph file
@@ -111,25 +123,31 @@ def eulerian_string(filename, kmer):
     path_file = 'output/eulerian/eulerianPath_' + kmer + '.txt'    # File that will be written to
 
     with open(cycle_file, 'w') as f:                            # Write eulerian cycle to file
-        f.write(''.join(cycle))
+
+        contig = cycle[0]
+        for c in cycle[1:]:                                     # Assembling a contig
+            contig += c[len(c)-1]                               # Get last character and add it to contig
+
+        f.write(''.join(contig))
 
     with open(path_file, 'w') as f:                             # Write eulerian path to file
+
+        contig = path[0]
+        for c in path[1:]:                                      # Assembling a contig
+            contig += c[len(c)-1]                               # Get last character and add it to contig
+
         f.write(''.join(path))
+
+    return (cycle_file, path_file)
 
 # ==============================================================================================================
 # Aligns assembled contig with reference genome, creates text file of alignment, and plots comparison
-def align_contig():
-    dir = './output/align/'                                         # Directory to beused
-    ref_seg = get_data('./input/sars_spike_protein_assembled.fna')  # Get data for reference sequence (Spike protien)
+def align_contig(filename, kmer):
+    ref_seg = get_data('./input/sars_spike_protein_assembled.fna')      # Get data for reference sequence (Spike protien)
+    data = get_data(filename)                                           # Get in data from files for alignment
 
-    for file in os.listdir(dir):                                    # Iterate thru files in align folder
-        f = os.path.join(dir, file)
-        print(f)
-        data = get_data(f)                                          # Get in data from files for alignment
-
-        a = al.alignment(ref_seg[0], data[0])                       # Initialize alignment
-        a.get_alignment()                                           # Retrieve alignment data
-        #a.plot_comp(filename)                                      # Create a comparison plot of the two sequences
+    a = al.alignment(ref_seg[0][0], data[0][0], -2, -1, True)                 # Initialize alignment
+    a.alignment_file(kmer)
 
 # ==============================================================================================================
 def main():
@@ -147,9 +165,7 @@ def main():
             lend = int(input("End index for the last sequence: "))
 
             data = get_data(file)                                   # Processing genome data from fna file
-            db_graph = db.De_bruijn(data[0], data[1])               # Create de Bruijn graph
-            db_graph.de_bruijn_graph(start=lstart, end=lend, k=k)
-            db_graph.make_docs(True,True,True,str(k))
+            loop_kmer(data, k, k, lstart, lend)
 
         elif(inpt == '-k'):                                           # User enters kmer range
             kstart = int(input("Enter starting k-mer value: "))
@@ -167,10 +183,6 @@ def main():
             data = get_data(file)                                   # Processing genome data from fna file
             loop_kmer(data, kstart, kend, lstart, lend)
 
-        elif(inpt == '-a'):                                         # Align contig with reference genome (Spike protein)
-            data = get_data(file)
-            align_contig(data)
-
         else:
             print("ERROR: Invalid Input!")
             print("Use:\n-l\tsegmenting reads list\n-k\tk-mer range\n-kl\tk-mer range and segmenting reads list\n-a\taligning contig")
@@ -182,11 +194,11 @@ def main():
 
         fna_file = "./input/sars_spike_protein_reads.fastq"
         data = get_data(fna_file)                                       # Processing genome data from fna file
-        k = 10
-
-        db_graph = db.De_bruijn(data[0], data[1])                       # Create de Bruijn graph
-        db_graph.de_bruijn_graph(start=0, end=2, k=k)
-        db_graph.make_docs(True,True,True, str(k))
+        k = 14
+        lstart = 0
+        lend = 3
+        
+        loop_kmer(data, k, k, lstart, lend)
 
     # ----------------------------------------------------------------------------------------------------------
     # Use default file and run kmer loop

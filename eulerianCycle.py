@@ -78,7 +78,7 @@ def EulerianCycle(strings, format=True):
 
 def main():
     kmer = sys.argv[1]
-    f = open('output/spike_protein_directed_graph.txt', 'r')
+    f = open('output/temp/spike_protein_directed_graph_10.txt', 'r')
 
     text = []
     for line in f:
