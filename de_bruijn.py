@@ -122,7 +122,7 @@ class De_bruijn:
             fig.add_edges_from(self.edges)      # Add edges to weighted graph
             bar.update(1)
             k = 0.9/math.sqrt(fig.order())
-            pos = nx.spring_layout(fig, k=k)          # Set layout to shell (circular)
+            pos = nx.shell_layout(fig, scale=2)          # Set layout to shell (circular)
             bar.update(1)
 
             options = {
