@@ -148,6 +148,7 @@ def align_contig(filename, kmer):
 
     a = al.alignment(ref_seg[0][0], data[0][0], -2, -1, True)                 # Initialize alignment
     a.alignment_file(kmer)
+    a.plot_compare(kmer)
 
 # ==============================================================================================================
 def main():
@@ -196,7 +197,7 @@ def main():
         data = get_data(fna_file)                                       # Processing genome data from fna file
         k = 14
         lstart = 0
-        lend = 3
+        lend = 4
         
         loop_kmer(data, k, k, lstart, lend)
 

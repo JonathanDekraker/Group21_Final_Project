@@ -1,5 +1,6 @@
 # Samuel Kitzerow, kitze012
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 '''
@@ -231,7 +232,7 @@ class alignment:
         print(self.seq_align)
 
     # ----------------------------------------------------------------------------------------------------------------------
-
+    # Writes alignment data to a text file
     def alignment_file(self, kmer):
         filename = './output/align/alignment_{}.txt'.format(kmer)
 
@@ -240,6 +241,25 @@ class alignment:
             f.write(self.ref_align + '\n')
             f.write(self.vis + '\n')
             f.write(self.seq_align + '\n')
+    
+    # ----------------------------------------------------------------------------------------------------------------------
+    # Creates a figure displaying the similarities between the two sequences
+    def plot_compare(self, kmer, show_fig=False, save_fig=True):
+
+        plt.clf()                                                           # Clear figure
+        plt.title('Comparing Assembled Contig(s) With Spike Protein')
+        plt.xlabel('Assembled Sars Spike Protein ')
+        plt.ylabel('Our Assembled Contig(s)')
+
+        for c in range(len(self.vis)):                                      # Plot only matches
+            if(self.vis[c] == '|'):
+                plt.plot(c, c, '.', color='#570503')
+
+        if(show_fig): plt.show()
+        if(save_fig): 
+            file = './output/align/alignment_{}.png'.format(kmer)
+            print("Creating Comparison Plot: ", file)
+            plt.savefig(file, dpi=500)
 
 # ==========================================================================================================================
 # Testing
