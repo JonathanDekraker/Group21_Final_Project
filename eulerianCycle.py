@@ -88,7 +88,7 @@ def main():
     ec = EulerianCycle(text)
     print('->'.join(ec))
 
-    filename = 'output/align/' + kmer + '_eulerianCycle.txt'
+    filename = 'output/eulerian/eulerianCycle_' + kmer + '.txt'
     with open(filename, 'w') as f:
         f.write(''.join(ec))
     f.close()

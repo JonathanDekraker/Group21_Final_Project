@@ -101,7 +101,7 @@ def main():
     ep = EulerianPath(text)
     print('->'.join(ep))
 
-    filename = 'output/align/' + kmer + '_eulerianPath.txt'
+    filename = 'output/eulerian/eulerianPath_' + kmer + '.txt'
     with open(filename, 'w') as f:
         f.write(''.join(ep))
 

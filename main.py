@@ -1,10 +1,21 @@
 # Final project
 
+
+'''
+Process Frow:
+De Bruijn Garph -> Eulerian Cycle/Path -> Alignment
+     (1)        ->         (2)         ->    (3)
+
+(1) FASTQ file of Reads -> Graph PDF, edges.txt
+'''
+
 import sys
 import os
 import numpy as np
 import de_bruijn as db
 import alignment as al
+import eulerianCycle as ec
+import eulerianPath as ep
 
 # ==============================================================================================================
 # Retreives header/sequence pair data from the fna file
@@ -44,7 +55,7 @@ def get_data(filename):
             header_data.append('Assembled data')            # No headers should be in the file so add this one
     else:
         print("ERROR: Invalid File Type!")
-        print("Only fna or fastq types, entered file type is ", mime)
+        print("Only fna, fastq, or txt types! The entered file type is ", mime)
         return
 
     return (seq_data, header_data)
@@ -67,17 +78,46 @@ def loop_kmer(data, kstart, kend, lstart=0, lend=1):
         db_data.make_docs(True, True, True, str(i))
 
 # ==============================================================================================================
-# Removes temporary output files in temp and graph
+# Clears out old files
 def rmove():
-    dir = './output/temp/'
+    dir = './output/align/'
     for f in os.listdir(dir):
-        os.remove(os.path.join(dir, f))
+        os.remove(os.path.join(dir, f))     # Remove files in align directory
+
+    dir = './output/eulerian/'
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))     # Remove files in eulerian directory
 
     dir = './output/graph/'
     for f in os.listdir(dir):
-        os.remove(os.path.join(dir, f))
+        os.remove(os.path.join(dir, f))     # Remove files in graph directory
+
+    dir = './output/temp/'
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))     # Remove files in temp directory
 
 # ==============================================================================================================
+# Finds eulerian cycle and path, writes the data to a text file
+def eulerian_string(filename, kmer):
+
+    text = []
+    with open(filename, 'r') as f:                              # Open directed graph file
+        for line in f:
+            text.append(line.strip())                           # Add the edges and strip the newline characters
+
+    cycle = ec.EulerianCycle(text)                              # Find eulerian cycle
+    path = ep.EulerianPath(text)                                # Find eulerian cycle
+    cycle_file = 'output/eulerian/eulerianCycle_' + kmer + '.txt'  # File that will be written to
+    path_file = 'output/eulerian/eulerianPath_' + kmer + '.txt'    # File that will be written to
+
+    with open(cycle_file, 'w') as f:                            # Write eulerian cycle to file
+        f.write(''.join(cycle))
+
+    with open(path_file, 'w') as f:                             # Write eulerian path to file
+        f.write(''.join(path))
+
+# ==============================================================================================================
+# Aligns assembled contig with reference genome, creates text file of alignment, and plots comparison
 def align_contig():
     dir = './output/align/'                                         # Directory to beused
     ref_seg = get_data('./input/sars_spike_protein_assembled.fna')  # Get data for reference sequence (Spike protien)
