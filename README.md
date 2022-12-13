@@ -1,5 +1,5 @@
 ## Final Project
-**Genome Sequencing of the SARS-CoV-2 Spike Protein using the de Bruijn Graph**   
+**Assembly of the SARS-CoV-2 Spike Protein using the de Bruijn Graph**   
 Jonathan Dekraker<sup>1</sup>, José Solórzano<sup>2</sup>, Samuel Kitzerow<sup>3</sup>   
 1. Department of Computer Science.
 2. Department of Plant Pathology.
@@ -17,7 +17,7 @@ User entered parameters:
 ```
 python .\main.py -l			# Input list indices [start:end]
 python .\main.py -k			# Input kmer range
-python .\main.py -kl		# Input both
+python .\main.py -kl			# Input both
 ```
 
 ### Run Alignment
