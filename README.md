@@ -1,9 +1,8 @@
 ## Final Project
 **Assembly of the SARS-CoV-2 Spike Protein using the de Bruijn Graph**   
-Jonathan Dekraker<sup>1</sup>, José Solórzano<sup>2</sup>, Samuel Kitzerow<sup>3</sup>   
+Jonathan Dekraker<sup>1</sup>, José Solórzano<sup>2</sup>, Samuel Kitzerow<sup>1</sup>   
 1. Department of Computer Science.
 2. Department of Plant Pathology.
-3. Department of Computer Science.
 
 
 ### Run Main Program
