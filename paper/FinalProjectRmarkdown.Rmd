@@ -53,7 +53,7 @@ Applying the de Bruijn graph is not a direct procedure since inexact repeats and
 
 ```{r echo=FALSE, out.width="100%", fig.align ='center', fig.cap="Representation of the de Bruijn graph using k-mer of size 14 and 4 reads. The light blue dots represent the nodes and the red lines are the edges."}
 library(knitr)
-include_graphics("../output/deBruijn.png")
+include_graphics("../output/results/deBruijn_14.png")
 ```
 
 ## Results
