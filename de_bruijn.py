@@ -138,7 +138,7 @@ class De_bruijn:
             bar.update(1)
             plt.axis("off")                     # Do not show any axis
             if(show_fig): plt.show()            # Toggel show
-            if(save_fig): plt.savefig(file, dpi=500)     # Saving file and setting size
+            if(save_fig): plt.savefig(file, transparent=False ,dpi=500)     # Saving file and setting size
             bar.update(1)
 
     # ----------------------------------------------------------------------------------------------------------

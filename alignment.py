@@ -255,7 +255,7 @@ class alignment:
 
         percent = (count/len(self.seq)) * 100
         plt.title('Comparing Assembled Contig(s) With Spike Protein ({:.2f}% Match)'.format(percent))
-        plt.xlabel('Assembled Sars Spike Protein ')
+        plt.xlabel('Assembled SARS Spike Protein ')
         plt.ylabel('Our Assembled Contig(s)')
 
         if(show_fig): plt.show()
